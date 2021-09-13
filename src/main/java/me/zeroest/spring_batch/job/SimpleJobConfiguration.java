@@ -36,7 +36,9 @@ public class SimpleJobConfiguration {
     public Step simpleStep1(@Value("#{jobParameters[nowDateTime]}") String nowDateTime) {
         return stepBuilderFactory.get("simpleStep1")
                 .tasklet(((contribution, chunkContext) -> {
-                    throw new IllegalArgumentException("step1에서 실패");
+                    log.info(">>>>> This is Step1");
+                    log.error(">>>>> nowDateTime = {}", nowDateTime);
+                    return RepeatStatus.FINISHED;
                 }))
                 .build();
     }
