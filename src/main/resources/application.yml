@@ -1,0 +1,8 @@
+
+spring:
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mysql://vm.zeroest.me:40000/spring_batch
+      username: root
+      password: pass
+      driver-class-name: com.mysql.cj.jdbc.Driver
