@@ -80,7 +80,48 @@ class ErrorJobTasklet implements Tasklet {
 해당 에러를 만날 수 있다.  
 즉 Bean을 메소드, 클래스 생성은 무방하나 Scope는 Step, Job을 가져야한다.
 
+---
 
+Spring Boot의 환경변수 또는 시스템 변수를 사용할시
+
+1. 시스템 변수를 사용할 경우 Spring Batch 의 Job Parameter 관련 기능을 쓰지 못한다.
+   * 같은 Job Parameter로 같은 Job을 두번 실행하지 않지만 해당 기능이 작동하지 않는다.
+   * 메타 테이블의 BATCH_JOB_EXECUTION_PARAMS가 관리되지 않는다.
+2. Command line이 아닌 다른 방법으로 Job을 실행하기 어렵다. (아직 무슨말인지 이해못함...)
+   * 실행시 전역 상태(시스템 변수 혹은 환경 변수)를 동적으로 변경시킬 수 있도록 Spring Batch를 구성해야한다.
+   * 동시에 여러 Job을 실행하려는 경우 또는 테스트 코드로 Job을 실행해야할때 문제가 발생할 수 있다.
+3. Late Binding을 사용하지 못한다.
+   * 외부 파라미터에 따라 Batch가 다르게 동작해야한다면, 시스템 변수로 이것을 풀어내기 어렵다.
+
+하지만 Job Parameter를 사용하면 아래와 같이 쉽게 해결할 수 있다.
+```java
+@Slf4j
+@RequiredArgsConstructor
+@RestController
+public class JobLauncherController {
+
+    private final JobLauncher jobLauncher;
+    private final Job job;
+
+    @GetMapping("/launchjob")
+    public String handle(@RequestParam("fileName") String fileName) throws Exception {
+
+        try {
+            JobParameters jobParameters = new JobParametersBuilder()
+                                    .addString("input.file.name", fileName)
+                                    .addLong("time", System.currentTimeMillis())
+                                    .toJobParameters();
+            jobLauncher.run(job, jobParameters);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+
+        return "Done";
+    }
+}
+```
+> 웹서버에서 Batch를 관리하는 것은 권장하지 않는다.  
+> 예제 코드로 확인 할 것.
 
 
 
