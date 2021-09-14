@@ -49,6 +49,37 @@ Bean 생성 지연으로 얻는 이점
 
 ---
 
+jobParameters 는 Step이나, Tasklet, Reader 등 Batch 컴포넌트 Bean의 생성 시점에 호출할 수 있지만  
+정확히는 Scope Bean 을 생성할때만 가능하다.  
+즉 @StepScope, @JobScope Bean을 생성할때만 jobParameters가 생성 된다.
+
+```java
+@Slf4j
+@Component
+//@StepScope
+class ErrorJobTasklet implements Tasklet {
+
+   @Value("#{jobParameters[requestDate]}")
+   private String requestDate;
+
+   public ErrorJobTasklet() {
+      log.info(">>>> ErrorJobTasklet 생성");
+   }
+
+   @Override
+   public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+      log.info(">>>> ErrorJobTasklet");
+      log.info(">>>> requestDate = {}", requestDate);
+      return RepeatStatus.FINISHED;
+   }
+}
+```
+
+위와같이 jobParameters를 설정하고 @StepScope설정을 주지 않는다면  
+`SpelEvaluationException: EL1008E: Property or field 'jobParameters' cannot be found on object of type 'org.springframework.beans.factory.config.BeanExpressionContext`  
+해당 에러를 만날 수 있다.  
+즉 Bean을 메소드, 클래스 생성은 무방하나 Scope는 Step, Job을 가져야한다.
+
 
 
 
