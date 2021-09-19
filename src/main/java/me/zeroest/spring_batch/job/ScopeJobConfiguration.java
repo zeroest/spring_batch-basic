@@ -67,7 +67,7 @@ public class ScopeJobConfiguration {
 
 @Slf4j
 @Component
-//@StepScope
+@StepScope
 class ErrorJobTasklet implements Tasklet {
 
     @Value("#{jobParameters[requestDate]}")
