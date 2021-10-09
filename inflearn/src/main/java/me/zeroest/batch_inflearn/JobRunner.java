@@ -9,6 +9,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 @RequiredArgsConstructor
 public class JobRunner implements ApplicationRunner {
@@ -21,6 +23,9 @@ public class JobRunner implements ApplicationRunner {
 
         final JobParameters jobParameters = new JobParametersBuilder()
                 .addString("name", "user1")
+                .addLong("seq", 3L)
+                .addDate("date", new Date())
+                .addDouble("age", 12.4)
                 .toJobParameters();
 
         jobLauncher.run(job, jobParameters);
