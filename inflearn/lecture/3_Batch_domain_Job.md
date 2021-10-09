@@ -1,0 +1,65 @@
+
+# 배치 도메인 
+
+---
+
+# Job
+
+## 개념
+
+- 배치 계층 구조에서 가장 상위에 있는 개념, 하나의 배치작업 자체를 의미
+
+  - "API서버의 접속 로그 데이터를 통계 서버로 옮기는 배치" 인 Job 자체를 의미
+
+- Job Configuration을 통해 생성되는 객체 단위로서 배치작업을 어떻게 구성하고 실행할 것인지 전체적으로 설정하고 명세해 놓은 객체 
+
+- 배치 Job을 구성하기 위한 최상위 인터페이스, 스프링 배치가 기본 구현체를 제공한다
+
+- 여러 Step을 포함하고 있는 컨테이너로서 반드시 한개 이상의 Step으로 구성해야 함
+
+
+## 기본 구현체
+
+- SimpleJob
+
+  - 순차적으로 Step을 실행시키는 Job
+  - 모든 Job에서 유용하게 사용할 수 있는 표준 기능을 갖고 있음
+
+- FlowJob
+
+  - 특정한 조건과 흐름에 따라 Step을 구성하여 실행시키는 Job
+  - Flow 객체를 실행시켜서 작업을 진행함 
+
+
+## 클래스 구성
+
+![Job_struct](./Job_struct.png)
+
+--- 
+
+# JobInstance
+
+## 개념 
+
+- Job이 실행될 때 생성되는 Job의 논리적 실행단위 객체로 고유하게 식별 가능한 작업 실행을 나타냄
+
+- Job의 설정과 구성은 동일하지만 Job이 실행되는 시점에 처리하는 내용은 다르기 때문에 Job의 실행을 구분해야 함
+
+  - 하루에 한번씩 배치 Job이 실행된다면 매일 실행되는 각각의 Job을 JobInstance로 표현한다
+
+- JobInstance 생성 및 실행
+
+  - 처음 시작하는 Job + JobParameter 일 경우 새로운 JobInstance 생성
+  - 이전과 동일한 Job + JobParameter 로 실행 할 경우 이미 존재하는 JobInstance 리턴
+     - 내부적으로 JobName + jobKey(jobParameters의 해시값) 를 가지고 JobInstance 객체 얻음
+
+- Job과는 1:N 관계
+
+## BATCH_JOB_INSTANCE 테이블과 매핑 
+
+- JOB_NAME (job) 과 JOB_KEY (jobParameter 해시값) 가 동일한 데이터는 중복해서 저장할 수 없음 
+
+
+![JobInstance_struct](./JobInstance_struct.png)
+
+
