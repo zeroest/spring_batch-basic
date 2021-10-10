@@ -69,4 +69,57 @@ BatchAutoConfiguration -> JobLauncherApplicationRunner -> setJobs -> run(Applica
 
 ![JobBuilder_class_struct](img/JobBuilder_class_struct.png )
 
-![JobBuilder_class_struct](./JobBuilder_class_struct.png )
+---
+
+# SimpleJob
+
+## 개념
+
+- SimpleJob은 Step을 실행시키는 Job 구현체로서 SimpleJobBuilder에 의해 생성
+
+- 여러 단계의 Step으로 구성할 수 있으며 Step을 순차적으로 실행
+
+- 모든 Step의 실행이 성공적으로 완료되어야 Job이 성공적으로 완료 된다 
+
+- 맨 마지막에 실행한 Step의 BatchStatus 가 최종 BatchStatus 가 된다
+
+## 흐름
+
+![SimpleJob_flow](img/SimpleJob_flow.png)
+
+## API
+
+JobBuilderFactory > JobBuilder > SimpleJobBuilder > SimpleJob
+
+```java
+public Job batchJob() {
+    return jobBuilderFactory.get("batchJob")        // JobBuilder 를 생성하는 팩토리,  Job 의 이름을 매개변수로 받음
+            .start(Step)                            // 처음 실행 할 Step 설정,  최초 한번 설정, 이 메서드를 실행하면 SimpleJobBuilder 반환
+            .next(Step)                             // 다음에 실행 할 Step 설정, 횟수는 제한이 없으며 모든 next() 의 Step 이 종료가 되면 Job 이 종료된다
+            .incrementer(JobParametersIncrementer)  // JobParameter 의 값을 자동을 증가해 주는 JobParametersIncrementer 설정
+            .preventRestart(true)                   // Job 의 재 시작 가능 여부 설정, 기본값은 true
+            .validator(JobParameterValidator)       // JobParameter 를 실행하기 전에 올바른 구성이 되었는지 검증하는 JobParametersValidator 설정
+            .listener(JobExecutionListener)         // Job 라이프 사이클의 특정 시점에 콜백 제공받도록 JobExecutionListener 설정 
+            .build();                               // SimpleJob 생성
+}
+```
+
+## validator()
+
+### 개념
+
+- Job 실행에 꼭 필요한 파라미터를 검증하는 용도
+
+- DefaultJobParametersValidator 구현체를 지원하며, 좀 더 복잡한 제약조건이 있다면 인터페이스를 직접 구현할 수도 있음 
+
+- 검증이 2번 수행 됨 
+  1. Job 이 수행 되기 전에 JobRepository에 기능이 수행되기 전 단계 (SimpleJobLauncher)
+  2. Job 이 실행 되기 전에 (AbstractJob - execute)
+
+### 구조
+
+![JobBuilder_validator](img/JobBuilder_validator.png)
+
+### 흐름도 
+
+![DefaultJobParameterValidator_flow](img/DefaultJobParameterValidator_flow.png)

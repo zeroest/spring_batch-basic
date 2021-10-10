@@ -1,6 +1,7 @@
 package me.zeroest.batch_inflearn;
 
 import lombok.RequiredArgsConstructor;
+import me.zeroest.batch_inflearn.validator.CustomJobParametersValidator;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.JobParameters;
@@ -8,6 +9,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.DefaultJobParametersValidator;
 import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.flow.Flow;
 import org.springframework.batch.repeat.RepeatStatus;
@@ -30,17 +32,21 @@ public class HelloJobConfiguration {
     /*
      * Program arguments: --spring.batch.job.names=executionContextJob
      * */
-/*
     @Primary
     @Bean
     public Job helloJob() {
         return jobBuilderFactory.get("helloJob")
                 .start(helloStep1())
                 .next(helloStep2())
-                .listener(jobExecutionListener)
+//                .listener(jobExecutionListener)
+//                .validator(new CustomJobParametersValidator())
+                .validator(new DefaultJobParametersValidator(
+                        new String[]{"name", "date"},
+                        new String[]{"count"}
+                ))
                 .build();
     }
-*/
+/*
     @Primary
     @Bean
     public Job helloJob() {
@@ -50,6 +56,7 @@ public class HelloJobConfiguration {
                 .end()
                 .build();
     }
+*/
 
     @Bean
     public Step helloStep1() {
