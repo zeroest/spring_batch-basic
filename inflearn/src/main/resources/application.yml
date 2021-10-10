@@ -3,6 +3,9 @@ spring:
   profiles:
     active: mysql
 
+  main:
+    web-application-type: none
+
 ---
 
 spring:
@@ -38,5 +41,7 @@ spring:
   batch:
     jdbc:
       initialize-schema: never
+#    job:
+#      enabled: false
     job:
-      enabled: false
+      names: ${job.name:NONE}
