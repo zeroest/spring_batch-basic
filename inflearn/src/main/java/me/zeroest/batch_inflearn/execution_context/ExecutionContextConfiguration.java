@@ -22,7 +22,7 @@ public class ExecutionContextConfiguration {
     private final ExecutionContextTasklet4 executionContextTasklet4;
 
     /*
-    * Program arguments: --job.name=executionContextJob
+    * Program arguments: --spring.batch.job.names=executionContextJob
     * */
     @Bean
     public Job executionContextJob() {

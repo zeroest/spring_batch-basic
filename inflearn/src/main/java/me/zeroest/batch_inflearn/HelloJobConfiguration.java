@@ -2,6 +2,7 @@ package me.zeroest.batch_inflearn;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -20,11 +21,17 @@ public class HelloJobConfiguration {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
 
+    private final JobExecutionListener jobExecutionListener;
+
+    /*
+     * Program arguments: --spring.batch.job.names=executionContextJob
+     * */
     @Bean
     public Job helloJob() {
         return jobBuilderFactory.get("helloJob")
                 .start(helloStep1())
                 .next(helloStep2())
+                .listener(jobExecutionListener)
                 .build();
     }
 
