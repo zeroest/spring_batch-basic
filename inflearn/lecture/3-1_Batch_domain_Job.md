@@ -33,7 +33,7 @@
 
 ## 클래스 구성
 
-![Job_struct](./Job_struct.png)
+![Job_struct](img/Job_struct.png)
 
 
 --- 
@@ -61,7 +61,7 @@
 - JOB_NAME (job) 과 JOB_KEY (jobParameter 해시값) 가 동일한 데이터는 중복해서 저장할 수 없음 
 
 
-![JobInstance_struct](./JobInstance_struct.png)
+![JobInstance_struct](img/JobInstance_struct.png)
 
 
 ---
@@ -94,7 +94,7 @@
 
 - JOB_EXECUTION 과 1:N 의 관계 
 
-![JobParameter_struct](./JobParameter_struct.png)
+![JobParameter_struct](img/JobParameter_struct.png)
 
 
 ---
@@ -119,8 +119,8 @@
 
 - JobInstance와 JobExecution은 1:N 의 관계로서 JobInstance에 대한 성공/실패의 내역을 가지고 있음
 
-![JobExecution_struct](./JobExecution_struct.png)
+![JobExecution_struct](img/JobExecution_struct.png)
 
-![JobExecution_example1](./JobExecution_example1.png)
-![JobExecution_example2](./JobExecution_example2.png)
+![JobExecution_example1](img/JobExecution_example1.png)
+![JobExecution_example2](img/JobExecution_example2.png)
 

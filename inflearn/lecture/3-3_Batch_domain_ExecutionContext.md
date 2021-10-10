@@ -19,6 +19,6 @@
   
 - Job 재 시작시 이미 처리한 Row 데이터는 건너뛰고 이후로 수행하도록 할 때 상태 정보를 활용한다 
 
-![ExecutionContext_struct](./ExecutionContext_struct.png)
+![ExecutionContext_struct](img/ExecutionContext_struct.png)
 
-![ExecutionContext_flow](./ExecutionContext_flow.png)
+![ExecutionContext_flow](img/ExecutionContext_flow.png)

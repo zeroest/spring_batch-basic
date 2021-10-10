@@ -13,9 +13,9 @@
 
   - JobLauncher, Job, Step 구현체 내부에서 CRUD 기능을 처리함 
 
-![JobRepository_struct](./JobRepository_struct.png)
+![JobRepository_struct](img/JobRepository_struct.png)
 
-![JobRepository_flow](./JobRepository_flow.png)
+![JobRepository_flow](img/JobRepository_flow.png)
 
 ## JobRepository 설정
 

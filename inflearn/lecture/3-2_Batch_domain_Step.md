@@ -34,7 +34,7 @@
 
   - Step 내에서 Flow를 실행하도록 한다 
 
-![Step_struct](./Step_struct.png)
+![Step_struct](img/Step_struct.png)
 
 
 ## API 설정에 따른 Step 생성
@@ -113,9 +113,9 @@ public Step taskletStep(){
 - JobExecution과 StepExecution은 1:N의 관계 
 - 하나의 Job에 여러 개의 Step으로 구성했을 경우 각 StepExecution은 하나의 JobExecution을 부모로 가진다 
 
-![StepExecution_struct](./StepExecution_struct.png)
+![StepExecution_struct](img/StepExecution_struct.png)
 
-![StepExecution_flow](./StepExecution_flow.png)
+![StepExecution_flow](img/StepExecution_flow.png)
 
 
 ---
@@ -130,6 +130,6 @@ public Step taskletStep(){
 
 - ExitStatus의 기본 종료코드 외 사용자 정의 종료코드를 생성해서 적용 할 수 있음
 
-![StepContribution_struct](./StepContribution_struct.png)
+![StepContribution_struct](img/StepContribution_struct.png)
 
-![StepContribution_flow](./StepContribution_flow.png)
+![StepContribution_flow](img/StepContribution_flow.png)

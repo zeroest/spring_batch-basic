@@ -109,7 +109,7 @@ public class HelloJobConfiguration {
 
 ## 메타 데이터 스키마 
 
-![meta-data-erd](./meta-data-erd.png)
+![meta-data-erd](img/meta-data-erd.png)
 
 - 배치의 실행 및 관리를 위한 목적으로 여러 도메인들(Job, Step, JobParameters, ...)의 정보들을 저장, 업데이트, 조회할 수 있는 스키마 제공
 - 실행 정보, 성공과 실패 여부 등을 관리함으로 배치운용에 있어 리스크 발생시 빠른 대처 가능

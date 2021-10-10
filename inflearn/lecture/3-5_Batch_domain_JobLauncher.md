@@ -19,7 +19,7 @@
 
 - 스프링 부트 배치에서는 JobLauncherApplicationRunner 가 자동적으로 JobLauncher를 실행시킨다
 
-![JobLauncher_struct](./JobLauncher_struct.png)
+![JobLauncher_struct](img/JobLauncher_struct.png)
 
 
 ### 동기적 실행
@@ -39,7 +39,7 @@
 
 - HTTP 요청에 의한 배치처리에 적합함 - 배치처리 시간이 길 경우 응답이 늦어지지 않도록 함 
 
-![JobLauncher_sync_async](./JobLauncher_sync_async.png)
+![JobLauncher_sync_async](img/JobLauncher_sync_async.png)
 
 참고
 

@@ -65,6 +65,8 @@ BatchAutoConfiguration -> JobLauncherApplicationRunner -> setJobs -> run(Applica
 - FlowJob 을 생성하는 Builder 클래스 
 - 내부적으로 FlowBuilder 를 반환함으로써 Flow 실행과 관련된 여러 설정 API를 제공한다 
 
-![JobBuilder_architecture](./JobBuilder_architecture.png)
+![JobBuilder_architecture](img/JobBuilder_architecture.png)
+
+![JobBuilder_class_struct](img/JobBuilder_class_struct.png )
 
 ![JobBuilder_class_struct](./JobBuilder_class_struct.png )
