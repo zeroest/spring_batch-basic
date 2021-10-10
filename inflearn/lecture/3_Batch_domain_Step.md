@@ -86,3 +86,37 @@ public Step taskletStep(){
         .build();
 }
 ```
+
+---
+
+# StepExecution
+
+## 개념
+
+- Step에 대한 한번의 시도를 의미하는 객체로서 Step 실행 중에 발생한 정보들을 저장하고 있는 객체
+
+  - 시작시간, 종료시간, 상태(시작됨, 완료, 실패), Commit count, Rollback count 등의 속성을 가짐 
+
+- Step이 매번 시도될 때마다 생성되며 각 Step 별로 생성된다 
+
+- Job이 재시작 하더라도 이미 성공적으로 완료된 Step은 재실행되지 않고 실패한 Step 만 실행된다
+
+- 이전 단계 Step이 실패해서 현재 Step을 실행하지 않았다면 StepExecution을 생성하지 않는다. Step이 실제로 시작됐을 때만 StepExecution을 생성한다 
+
+- JobExecution과의 관계
+
+  - Step의 StepExecution이 모두 정상적으로 완료 되어야 JobExecution이 정상적으로 완료된다 
+  - Step의 StepExecution 중 하나라도 실패하면 JobExecution은 실패한다 
+
+## BATCH_STEP_EXECUTION 테이블과 매핑
+
+- JobExecution과 StepExecution은 1:N의 관계 
+- 하나의 Job에 여러 개의 Step으로 구성했을 경우 각 StepExecution은 하나의 JobExecution을 부모로 가진다 
+
+![StepExecution_struct](./StepExecution_struct.png)
+
+![StepExecution_flow](./StepExecution_flow.png)
+
+
+
+
