@@ -33,3 +33,38 @@
 
 참고
 BatchAutoConfiguration -> JobLauncherApplicationRunner -> setJobs -> run(ApplicationArguments args(JobParameter로 전달한 값)) -> launchJobFromProperties(Properties) -> executeLocalJobs(JobParameters)
+
+--- 
+---
+
+# Job and Step
+
+---
+
+# JobBuilderFactory / JobBuilder
+
+스프링 배치는 Job 과 Step을 쉽게 생성 및 설정할 수 있도록 util 성격의 빌더 클래스들을 제공
+
+## JobBuilderFactory
+
+- JobBuiler 를 생성하는 팩토리 클래스로서 get(String name) 메서드 제공
+- JobBuilderFactory.get("jobName")
+  - "jobName" 은 스프링 배치가 Job을 실행시킬 때 참조하는 Job 이름
+
+## JobBuilder
+
+- Job을 구성하는 설정 조건에 따라 두 개의 하위 빌더 클래스를 생성하고 실제 Job 생성을 위임한다
+
+### SimpleJobBuilder
+
+- SimpleJob 을 생성하는 Builder 클래스  
+- Job 실행과 관련된 여러 설정 API를 제공한다 
+
+### FlowJobBuilder
+
+- FlowJob 을 생성하는 Builder 클래스 
+- 내부적으로 FlowBuilder 를 반환함으로써 Flow 실행과 관련된 여러 설정 API를 제공한다 
+
+![JobBuilder_architecture](./JobBuilder_architecture.png)
+
+![JobBuilder_class_struct](./JobBuilder_class_struct.png )

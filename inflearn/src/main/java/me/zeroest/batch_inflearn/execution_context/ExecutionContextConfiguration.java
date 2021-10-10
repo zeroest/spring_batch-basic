@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +36,7 @@ public class ExecutionContextConfiguration {
     }
 
     @Bean
+    @JobScope
     public Step step1() {
         return stepBuilderFactory.get("step1")
                 .tasklet(executionContextTasklet1)
@@ -42,6 +44,7 @@ public class ExecutionContextConfiguration {
     }
 
     @Bean
+    @JobScope
     public Step step2() {
         return stepBuilderFactory.get("step2")
                 .tasklet(executionContextTasklet2)
@@ -49,6 +52,7 @@ public class ExecutionContextConfiguration {
     }
 
     @Bean
+    @JobScope
     public Step step3() {
         return stepBuilderFactory.get("step3")
                 .tasklet(executionContextTasklet3)
@@ -56,6 +60,7 @@ public class ExecutionContextConfiguration {
     }
 
     @Bean
+    @JobScope
     public Step step4() {
         return stepBuilderFactory.get("step4")
                 .tasklet(executionContextTasklet4)

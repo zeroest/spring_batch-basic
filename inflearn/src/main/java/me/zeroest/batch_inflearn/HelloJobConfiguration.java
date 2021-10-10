@@ -6,7 +6,10 @@ import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.FlowBuilder;
+import org.springframework.batch.core.job.flow.Flow;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +30,7 @@ public class HelloJobConfiguration {
     /*
      * Program arguments: --spring.batch.job.names=executionContextJob
      * */
+/*
     @Primary
     @Bean
     public Job helloJob() {
@@ -34,6 +38,16 @@ public class HelloJobConfiguration {
                 .start(helloStep1())
                 .next(helloStep2())
                 .listener(jobExecutionListener)
+                .build();
+    }
+*/
+    @Primary
+    @Bean
+    public Job helloJob() {
+        return jobBuilderFactory.get("helloJob")
+                .start(flow())
+                .next(helloStep5())
+                .end()
                 .build();
     }
 
@@ -69,6 +83,47 @@ public class HelloJobConfiguration {
                     Thread.sleep(5000L);
 
                     System.out.println("Hello Spring Batch 2");
+                    return RepeatStatus.FINISHED;
+                })
+                .build();
+    }
+
+    @Bean
+    public Flow flow() {
+        return new FlowBuilder<Flow>("flow")
+                .start(helloStep3())
+                .next(helloStep4())
+                .end();
+    }
+
+    @Bean
+    @JobScope
+    public Step helloStep3() {
+        return stepBuilderFactory.get("step3")
+                .tasklet((contribution, chunkContext) -> {
+                    System.out.println("HelloJobConfiguration.step3");
+                    return RepeatStatus.FINISHED;
+                })
+                .build();
+    }
+
+    @Bean
+    @JobScope
+    public Step helloStep4() {
+        return stepBuilderFactory.get("step4")
+                .tasklet((contribution, chunkContext) -> {
+                    System.out.println("HelloJobConfiguration.step4");
+                    return RepeatStatus.FINISHED;
+                })
+                .build();
+    }
+
+    @Bean
+    @JobScope
+    public Step helloStep5() {
+        return stepBuilderFactory.get("step5")
+                .tasklet((contribution, chunkContext) -> {
+                    System.out.println("HelloJobConfiguration.step5");
                     return RepeatStatus.FINISHED;
                 })
                 .build();
