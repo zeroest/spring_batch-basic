@@ -1,0 +1,16 @@
+
+### Batch Sync
+POST http://localhost:8080/batch/sync
+Content-Type: application/json
+
+{
+  "id": "test"
+}
+
+### Batch Async
+POST http://localhost:8080/batch/async
+Content-Type: application/json
+
+{
+  "id": "test"
+}

@@ -10,6 +10,7 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.util.Date;
 import java.util.Map;
@@ -26,6 +27,7 @@ public class HelloJobConfiguration {
     /*
      * Program arguments: --spring.batch.job.names=executionContextJob
      * */
+    @Primary
     @Bean
     public Job helloJob() {
         return jobBuilderFactory.get("helloJob")
@@ -63,6 +65,8 @@ public class HelloJobConfiguration {
                 .tasklet((contribution, chunkContext) -> {
 
                     final Map<String, Object> jobParameters = chunkContext.getStepContext().getJobParameters();
+
+                    Thread.sleep(5000L);
 
                     System.out.println("Hello Spring Batch 2");
                     return RepeatStatus.FINISHED;

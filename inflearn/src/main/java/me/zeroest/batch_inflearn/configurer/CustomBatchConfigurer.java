@@ -39,4 +39,5 @@ public class CustomBatchConfigurer extends BasicBatchConfigurer {
         return factory.getObject();
 
     }
+
 }
