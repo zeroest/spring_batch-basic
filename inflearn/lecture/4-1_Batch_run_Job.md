@@ -175,3 +175,7 @@ public JobParameters getNext(@Nullable JobParameters parameters) {
     return new JobParametersBuilder(params).addLong(this.key, id).toJobParameters();
 }
 ```
+
+## SimpleJob Architecture
+
+![SimpleJob_Architecture](img/SimpleJob_Architechture.png)
