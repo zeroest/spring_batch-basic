@@ -11,11 +11,14 @@ import org.springframework.batch.core.job.flow.Flow;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.*;
+import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 @Configuration
 @RequiredArgsConstructor
@@ -29,8 +32,8 @@ public class StepBuilderConfiguration {
         return jobBuilderFactory.get("stepBuilderJob")
                 .start(sbjStep1())
                 .next(sbjStep2())
-                .next(sbjStep3())
-                .next(sbjStep4())
+//                .next(sbjStep3())
+//                .next(sbjStep4())
                 .build();
     }
 
@@ -51,22 +54,27 @@ public class StepBuilderConfiguration {
     public Step sbjStep2() {
         return stepBuilderFactory.get("sbjStep2")
                 .<String, String> chunk(3)
+/*
                 .reader(new ItemReader<String>() {
                     @Override
                     public String read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
                         return null;
                     }
                 })
+*/
+                .reader(new ListItemReader<>(Arrays.asList("item1", "item2", "item3", "item4", "item5")))
                 .processor(new ItemProcessor<String, String>() {
                     @Override
                     public String process(String item) throws Exception {
-                        return null;
+                        System.out.println("StepBuilderConfiguration.process");
+                        return item.toUpperCase();
                     }
                 })
                 .writer(new ItemWriter<String>() {
                     @Override
                     public void write(List<? extends String> items) throws Exception {
-
+                        System.out.println("StepBuilderConfiguration.write");
+                        items.forEach(System.out::println);
                     }
                 })
                 .build();
