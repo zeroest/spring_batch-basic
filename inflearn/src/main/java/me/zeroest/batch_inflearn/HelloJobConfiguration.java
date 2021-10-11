@@ -40,6 +40,7 @@ public class HelloJobConfiguration {
                 .next(helloStep2())
 //                .listener(jobExecutionListener)
 //                .validator(new CustomJobParametersValidator())
+//                .preventRestart()
                 .validator(new DefaultJobParametersValidator(
                         new String[]{"name", "date"},
                         new String[]{"count"}
@@ -87,9 +88,10 @@ public class HelloJobConfiguration {
 
                     final Map<String, Object> jobParameters = chunkContext.getStepContext().getJobParameters();
 
-                    Thread.sleep(5000L);
+//                    Thread.sleep(5000L);
 
                     System.out.println("Hello Spring Batch 2");
+//                    throw new RuntimeException("test");
                     return RepeatStatus.FINISHED;
                 })
                 .build();
