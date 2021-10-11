@@ -1,6 +1,7 @@
 package me.zeroest.batch_inflearn;
 
 import lombok.RequiredArgsConstructor;
+import me.zeroest.batch_inflearn.incrementer.CustomJobParametersIncrementer;
 import me.zeroest.batch_inflearn.validator.CustomJobParametersValidator;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
@@ -12,6 +13,7 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.job.DefaultJobParametersValidator;
 import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.flow.Flow;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,10 +43,14 @@ public class HelloJobConfiguration {
 //                .listener(jobExecutionListener)
 //                .validator(new CustomJobParametersValidator())
 //                .preventRestart()
+/*
                 .validator(new DefaultJobParametersValidator(
                         new String[]{"name", "date"},
                         new String[]{"count"}
                 ))
+*/
+//                .incrementer(new CustomJobParametersIncrementer())
+                .incrementer(new RunIdIncrementer())
                 .build();
     }
 /*

@@ -140,3 +140,38 @@ public Job batchJob() {
 
 - JobBuilderHelper -> preventRestart() -> CommonJobProperties.restartable = false
 - SimpleJobLauncher -> jobRepository.getLastJobExecution(job.getName(), jobParameters) -> !job.isRestartable() -> throw new JobRestartException();
+
+
+## incrementer()
+
+### 개념
+
+- JobParameters 에서 필요한 값을 증가시켜 다음에 사용될 JobParameters 오브젝트를 리턴 
+- 기존의 JobParameter 변경없이 Job을 여러번 시작하고자 할때
+- RunIdIncrementer 구현체를 지원하며 인터페이스를 직접 구현할 수 있음 
+
+### 구조
+
+![JobParametersIncrementer_struct](img/JobParametersIncrementer_struct.png)
+
+```java
+RunIdIncrementer
+
+@Override
+public JobParameters getNext(@Nullable JobParameters parameters) {
+
+    JobParameters params = (parameters == null) ? new JobParameters() : parameters;
+    JobParameter runIdParameter = params.getParameters().get(this.key);
+    long id = 1;
+    if (runIdParameter != null) {
+        try {
+            id = Long.parseLong(runIdParameter.getValue().toString()) + 1;
+        }
+        catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("Invalid value for parameter "
+                    + this.key, exception);
+        }
+    }
+    return new JobParametersBuilder(params).addLong(this.key, id).toJobParameters();
+}
+```
