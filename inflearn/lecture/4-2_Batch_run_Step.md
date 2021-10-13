@@ -140,3 +140,29 @@ public Step batchStep() {
         .build();
 }
 ```
+
+---
+
+# startLimit()
+
+## 개념
+
+- Step의 실행 횟수를 조정할 수 있다
+- Step 마다 설정할 수 있다
+- 설정 값을 초과해서 다시 실행하려고 하면 StartLimitExceededException 발생 
+- start-limit의 디폴트 값은 Integer.MAX_VALUE
+- 동일 JobInstance 에 대해 재실행시 적용
+  - JobParameter 가 변경되어서 JobInstance가 새로 적용될 시 초기화
+
+
+# allowStartIfComplete()
+
+## 개념
+
+- 재시작 가능한 Job에서 Step의 이전 성공 여부와 상관없이 항상 Step을 실행하기 위한 설정
+- 실행 마다 유효성을 검증하는 Step이나 사전 작업이 꼭 필요한 Step 등
+- 기본적으로 COMPLETED 상태를 가진 Step은 Job 재시작 시 실행하지 않고 스킵한다
+- allow-start-if-complete 가 "true" 로 설정된 Step은 항상 실행한다
+
+![TaskletStep_allowStartIfComplete](img/TaskletStep_allowStartIfComplete.png)
+

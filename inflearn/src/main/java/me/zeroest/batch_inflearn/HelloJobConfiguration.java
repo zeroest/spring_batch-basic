@@ -50,7 +50,7 @@ public class HelloJobConfiguration {
                 ))
 */
 //                .incrementer(new CustomJobParametersIncrementer())
-                .incrementer(new RunIdIncrementer())
+//                .incrementer(new RunIdIncrementer())
                 .build();
     }
 /*
@@ -65,6 +65,7 @@ public class HelloJobConfiguration {
     }
 */
 
+    int i = 0;
     @Bean
     public Step helloStep1() {
         return stepBuilderFactory.get("helloStep1")
@@ -82,8 +83,13 @@ public class HelloJobConfiguration {
 
 
                     System.out.println("Hello Spring Batch 1");
-                    return RepeatStatus.FINISHED;
+//                    return RepeatStatus.FINISHED;
+                    if(i++ == 3){
+                        return RepeatStatus.FINISHED;
+                    }
+                    return RepeatStatus.CONTINUABLE;
                 })
+                .allowStartIfComplete(true)
                 .build();
     }
 
@@ -97,9 +103,10 @@ public class HelloJobConfiguration {
 //                    Thread.sleep(5000L);
 
                     System.out.println("Hello Spring Batch 2");
-//                    throw new RuntimeException("test");
-                    return RepeatStatus.FINISHED;
+                    throw new RuntimeException("test");
+//                    return RepeatStatus.FINISHED;
                 })
+                .startLimit(3)
                 .build();
     }
 
