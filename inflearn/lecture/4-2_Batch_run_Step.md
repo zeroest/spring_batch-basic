@@ -166,3 +166,10 @@ public Step batchStep() {
 
 ![TaskletStep_allowStartIfComplete](img/TaskletStep_allowStartIfComplete.png)
 
+
+# TaskletStep Architecture
+
+![TaskletStep_Architecture1](img/TaskletStep_Architecture1.png)
+![TaskletStep_Architecture2](img/TaskletStep_Architecture2.png)
+
+SimpleJob -> SimpleStepHandler -> AbstractStep.execute() -> TaskletStep
