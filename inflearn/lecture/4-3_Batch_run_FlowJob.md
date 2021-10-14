@@ -197,3 +197,20 @@ Step의 BatchStatus 및 ExitStatus에는 아무런 영향을 주지 않고 Job�
   - stop() transition과 기본 흐름은 동일
   - 특정 Step에서 작업을 중단하도록 설정하면 중단 이전의 Step만 COMPLETED 저장되고 이후의 Step은 실행되지 않고 STOPPED 상태로 Job 종료
   - Job이 다시 실행됐을 때 실행해야 할 Step을 restart 인자로 넘기면 이전에 COMPLETED로 저장된 Step은 건너뛰고 중단 이후 Step 부터 시작한다
+
+---
+
+# Custom ExitStatus
+
+## 개념
+
+- ExitStatus에 존재하지 않는 exitCode를 새롭게 정의해서 설정
+- StepExecutionListener의 afterStep() 메서드에서 Custom ExitCode 생성 후 새로운 ExitStatus 반환
+- Step 실행 후 완료 시점에서 현재 ExitCode를 사용자 정의 ExitCode로 수정할 수 있음
+
+### AbstractStep <- TaskletStep
+```java
+exitStatus = exitStatus.and(stepExecution.getExitStatus());
+stepExecution.setExitStstua(exitStatus);
+exitStatus = exitStatus.and(getCompositeListener().afterStep(stepExecution));
+```
