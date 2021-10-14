@@ -42,3 +42,23 @@ public Job batchJob() {
 ![FlowJob_API](img/FlowJob_API.png)
 
 ![FlowBuilder_API](img/FlowBuilder_API.png)
+
+---
+
+# start() / next()
+
+```java
+public Job batchJob() {
+        return jobBuilderFactory.get(“batchJob")        
+        .start(Step)                                // 처음 실행할 Flow 설정, JobFlowBuilder 가 반환된다
+                                                    // 여기에 Step이 인자로 오게 되면 SimpleJobBuilder 가 반환
+        .next(Step or Flow or JobExecutionDecider)
+        .on(String pattern)
+        .to(Step)
+        .stop() / fail() / end() / stopAndRestart()
+        .from(Step)
+        .next(Step)
+        .end()
+        .build()
+        }
+```
