@@ -1,6 +1,7 @@
 package me.zeroest.batch_inflearn.flowJob;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
@@ -52,6 +53,7 @@ public class FlowJobConfiguration {
                     @Override
                     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
                         System.out.println("FlowJobConfiguration.fjStep2");
+                        contribution.setExitStatus(ExitStatus.FAILED);
                         return RepeatStatus.FINISHED;
                     }
                 })
