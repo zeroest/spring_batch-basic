@@ -240,3 +240,198 @@ SimpleFlow.start(FlowExecutor) .resume() -> DecisionState.handle()
 # FlowJob Architecture
 
 ![FlowJob_Architecture](img/FlowJob_Architecture.png)
+
+---
+
+# SimpleFlow
+
+## 개념
+
+- 스프링 배치에서 제공하는 Flow의 구현체로서 각 요소 (Step, Flow, JobExecutionDecider) 들을 담고 있는 State를 실행시키는 도메인 객체
+- FlowBuilder를 사용해서 생성하며 Transition과 조합하여 여러 개의 Flow 및 중첩 Flow를 만들어 Job을 구성할 수 있다 
+
+## 구조
+
+```java
+public interface Flow {
+
+  /**
+   * Flow 이름 조회 
+   * @return the name of the flow
+   */
+  String getName();
+
+  /**
+   * State 명으로 State 타입 반환 
+   * Retrieve the State with the given name. If there is no State with the
+   * given name, then return null.
+   *
+   * @param stateName the name of the state to retrieve
+   * @return the State
+   */
+  State getState(String stateName);
+
+  /**
+   * Flow를 실행시키는 start 메소드, 인자로 FlowExecutor를 넘겨주어 실행을 위임함, 실행 후 FlowExecution을 반환
+   * @param executor the {@link FlowExecutor} instance to use for the flow execution.
+   * @return a {@link FlowExecution} containing the exit status of the flow.
+   *
+   * @throws FlowExecutionException thrown if error occurs during flow execution.
+   */
+  FlowExecution start(FlowExecutor executor) throws FlowExecutionException;
+
+  /**
+   * 다음에 실행할 State 를 구해서 FlowExecutor에게 실행을 위임함 
+   * @param stateName the name of the state to resume on.
+   * @param executor the context to be passed into each state executed.
+   * @return a {@link FlowExecution} containing the exit status of the flow.
+   *
+   * @throws FlowExecutionException thrown if error occurs during flow execution.
+   */
+  FlowExecution resume(String stateName, FlowExecutor executor) throws FlowExecutionException;
+
+  /**
+   * Flow가 가지고 있는 모든 State를 Collection 타입으로 반환 
+   * Convenient accessor for clients needing to explore the states of this
+   * flow.
+   * @return the states
+   */
+  Collection<State> getStates();
+
+}
+```
+
+```java
+/**
+ * A {@link Flow} that branches conditionally depending on the exit status of
+ * the last {@link State}. The input parameters are the state transitions (in no
+ * particular order). The start state name can be specified explicitly (and must
+ * exist in the set of transitions), or computed from the existing transitions,
+ * if unambiguous.
+ *
+ * @author Dave Syer
+ * @author Michael Minella
+ * @since 2.0
+ */
+public class SimpleFlow implements Flow, InitializingBean {
+
+  // Flow 이름 
+  private final String name;
+
+  // State들 중에서 처음 실행할 State
+  private State startState;
+
+  // State 명으로 매핑되어 있는 Set<StateTransition>
+  private Map<String, Set<StateTransition>> transitionMap = new HashMap<>();
+
+  // State 명으로 매핑되어 있는 State 객체
+  private Map<String, State> stateMap = new HashMap<>();
+
+  // State 와 Transition 정보를 가지고 있는 StateTransition 리스트
+  private List<StateTransition> stateTransitions = new ArrayList<>();
+
+  private Comparator<StateTransition> stateTransitionComparator;
+  
+}
+```
+
+```java
+public interface State {
+
+  /**
+   * The name of the state. Should be unique within a flow.
+   *
+   * @return the name of this state
+   */
+  String getName();
+
+  /**
+   * Handle some business or processing logic and return a status that can be
+   * used to drive a flow to the next {@link State}. The status can be any
+   * string, but special meaning is assigned to the static constants in
+   * {@link FlowExecution}. The context can be used by implementations to do
+   * whatever they need to do. The same context will be passed to all
+   * {@link State} instances, so implementations should be careful that the
+   * context is thread-safe, or used in a thread-safe manner.
+   *
+   * @param executor the context passed in by the caller
+   * @return a status for the execution
+   * @throws Exception if anything goes wrong
+   */
+  FlowExecutionStatus handle(FlowExecutor executor) throws Exception;
+
+  /**
+   * Inquire as to whether a {@link State} is an end state. Implementations
+   * should return false if processing can continue, even if that would
+   * require a restart.
+   *
+   * @return true if this {@link State} is the end of processing
+   */
+  boolean isEndState();
+
+}
+
+// example
+public class StepState extends AbstractState implements StepLocator, StepHolder {
+  private final Step step;
+}
+```
+
+```java
+public class FlowBuilder<Q> {
+    // ...
+  private State createState(Object input) {
+    State result;
+    if (input instanceof Step) {
+      if (!states.containsKey(input)) {
+        Step step = (Step) input;
+        states.put(input, new StepState(prefix + "step" + (stepCounter++), step));
+      }
+      result = states.get(input);
+    }
+    else if (input instanceof JobExecutionDecider) {
+      if (!states.containsKey(input)) {
+        states.put(input, new DecisionState((JobExecutionDecider) input, prefix + "decision"
+                + (decisionCounter++)));
+      }
+      result = states.get(input);
+    }
+    else if (input instanceof Flow) {
+      if (!states.containsKey(input)) {
+        states.put(input, new FlowState((Flow) input, prefix + "flow" + (flowCounter++)));
+      }
+      result = states.get(input);
+    }
+    else {
+      throw new FlowBuilderException("No state can be created for: " + input);
+    }
+    dirty = true;
+    return result;
+  }
+  // ...
+}
+```
+
+> JobBuilderFactory > FlowJobBuilder > FlowBuilder > SimpleFlow
+
+```java
+@Bean
+public Job batchJob() {
+    return jobBuilderFactory.get("flowJob")
+        .start(flow1())                     // Flow를 정의하여 설정
+        .on("COMPLETED").to(flow2())        // Flow를 Transition과 함께 구성
+        .end()                              // SimpleFlow 객체 생성 -> flow1, flow2를 포함하는 flow
+        .build();                           // FlowJob 객체 생성 
+}
+
+@Bean
+public Flow flow1(){
+    FlowBuilder<Flow> flowBuilder = new FlowBuilder<>("flow1");
+    return flowBuilder.start(step1())
+        .next(step2())
+        .end();
+}
+```
+
+- Flow 안에 Step 을 구성하거나 Flow 를 중첩되게 구성할 수 있다.
+- Flow 를 외부에서 구성하면 재사용이 가능하다
