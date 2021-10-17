@@ -234,3 +234,9 @@ public interface JobExecutionDecider {
 ```
 
 SimpleFlow.start(FlowExecutor) .resume() -> DecisionState.handle()
+
+---
+
+# FlowJob Architecture
+
+![FlowJob_Architecture](img/FlowJob_Architecture.png)
