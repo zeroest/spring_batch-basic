@@ -435,3 +435,5 @@ public Flow flow1(){
 
 - Flow 안에 Step 을 구성하거나 Flow 를 중첩되게 구성할 수 있다.
 - Flow 를 외부에서 구성하면 재사용이 가능하다
+
+![SimpleFlow_example](img/SimpleFlow_example.png)
