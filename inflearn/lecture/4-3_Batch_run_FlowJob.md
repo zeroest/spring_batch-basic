@@ -437,3 +437,15 @@ public Flow flow1(){
 - Flow 를 외부에서 구성하면 재사용이 가능하다
 
 ![SimpleFlow_example](img/SimpleFlow_example.png)
+
+---
+
+# SimpleFlow Architecture
+
+![SimpleFlow_Architecture1](img/SimpleFlow_Architecture1.png)
+![SimpleFlow_Architecture2-1](img/SimpleFlow_Architecture2-1.png)
+![SimpleFlow_Architecture2-2](img/SimpleFlow_Architecture2-2.png)
+![SimpleFlow_Architecture3](img/SimpleFlow_Architecture3.png)
+![SimpleFlow_Architecture4](img/SimpleFlow_Architecture4.png)
+![SimpleFlow_Architecture5](img/SimpleFlow_Architecture5.png)
+
